@@ -16,7 +16,7 @@ the status, the cases that test it. Status: **open** (no option chosen), **propo
 option in use, not yet decided by the user), **decided** (user, date). Names of other systems' rules in brackets:
 spec = the pd2af specification (https://pd2af.github.io/specification/), CaSQ 1.4.4, pd2af 0.1.0 (Rougny).
 
-All rules are proposed or open as of 2026-11-02; the first case is the PGE2 loop of the eicosanoid atlas.
+All rules are proposed or open as of 2026-11-02; the first case is the PGE2 loop of the eicosanoid atlas. Our engine applies them and switches one option at a time.
 
 ## Layer 1: PD to Activity Flow
 
@@ -41,17 +41,20 @@ All rules are proposed or open as of 2026-11-02; the first case is the PGE2 loop
 - c. Split the pool into two glyphs. Set aside (2026-11-02): one molecule in one compartment is one entity for the
   converter (identity, state, compartment, class), so the split would not survive the reading.
 - In use: b. Status: open (b needs a test that tells "a pool its product leaves" from an ordinary transport). Case: 2.
+- Tried (PGE2 loop): a keeps PGE2 on for good once made, even with COX-2 blocked (the cycle); b gives the hand behaviour.
 
 **P4. Regulated removal (degradation, hydrolysis, catalysed inactivation).**
 - a. Negative influence from the remover to what it removes (spec A-CAT-SS, A-CAT-I).
 - b. Lost (CaSQ never reads consumption; pd2af 0.1.0 loses it when the target is a small molecule).
 - In use: a. Status: proposed. Case: 3.
+- Tried (PGE2 loop): b leaves cAMP on during LPS although LPS induces PDE4B, so the loop runs when it should not. A removal is a conversion whose product has no further role (AMP, 15-keto-PGE2); a conversion along a chain (PGH2 to PGE2) is not one.
 
 **P5. Modification cycle, A to A-P by a kinase, back by a phosphatase.**
 - a. One activity A; kinase positive, phosphatase negative (spec, pd2af 0.1.0).
 - b. Two activities A and A-P (CaSQ; the spec's MR003 example, RAF1 and RAF1-P; the spec's AE-CONS read literally,
   spec question 1). Breaks the cycle in CaSQ: resting form off at the first update, never phosphorylated.
 - In use: a. Status: proposed. Case: 5.
+- Tried (PGE2 loop): b (two activities, as CaSQ) never phosphorylates CREB: the loop cannot close after LPS.
 
 **P6. Logic of what makes one entity.**
 - a. Separate processes making one entity: OR. One process with an AND gate or a complex formed: AND.
@@ -73,23 +76,27 @@ All rules are proposed or open as of 2026-11-02; the first case is the PGE2 loop
 - a. The complex is the activity, AND(ligand, receptor) to complex (spec COMPL-AS).
 - b. The receptor's activity, positively influenced by the ligand; the receptor taken as present.
 - In use: b. Status: open (a and b give the same Boolean result when the receptor is constant). Case: 9.
+- Tried (PGE2 loop): a and b behave the same; b drops the receptor as a constant, which C2 then counts as carried by the complex.
 
 **P10. Dissociation releasing an active subunit from an inhibitory one (PKA: cAMP frees the catalytic subunit).**
 - a. AND, then dissociation to both parts (spec). Loses the inhibitory role of the regulatory subunit.
 - b. The inhibitory subunit inhibits the active one; the ligand inhibits the inhibitory subunit (ours, Activity Flow with all molecules).
 - c. Skip to the released subunit (pd2af 0.1.0: cAMP to PRKACA).
 - In use: b. Status: proposed. Case: 10.
+- Tried (PGE2 loop): a and b behave the same in the scenarios; b keeps PRKAR1A as an activity, so a knockout of the regulatory subunit can be expressed.
 
 **P11. Uncatalysed inactivation (an active receptor complex becomes desensitised).**
 - a. Negative influence of the entity on itself through a delay (ours: EP4 inhibits itself after a delay).
 - b. Not converted (CaSQ, spec: no case).
 - In use: a. Status: open (Boolean oscillation to note, model-ready R10). Case: 11.
+- Tried (PGE2 loop): b leaves EP4 on throughout LPS (no desensitisation).
 
 **P12. Currency metabolites (ATP, NAD+, H2O, CO2).**
 - a. Dropped by a fixed list (spec CURM).
 - b. Currency is a role in a reaction, not a molecule: dropped where it is a cofactor, kept where it is the substrate
   (ATP in adenylate cyclase).
 - In use: b. Status: proposed (needs the list of roles, spec question 4). Case: 12.
+- Tried (PGE2 loop): no difference (ATP is the only reactant of adenylate cyclase, kept under both).
 
 **P13. Competition for a substrate (AA taken by COX and by 5-LOX).**
 - a. Hidden inhibition: negative influence between the competing branches (spec HIDINH).
@@ -110,6 +117,20 @@ All rules are proposed or open as of 2026-11-02; the first case is the PGE2 loop
 - a. AND of both sides to both (spec M-CATR-M).
 - In use: none. Status: open. Case: 14.
 
+## Checks on every conversion (user, 2026-11-02)
+
+Not rules that make influences: tests the output must pass, reported by the engine after every run.
+
+**C1. Nothing kept without its reason.** An entity kept as an activity because it regulates something keeps that
+regulation, and the product of what it regulates stays in the output, connected. An activity left with no influence
+(kept as active, its regulation dropped) is reported. Keeps a pathway's end points (the genes a pathway switches on).
+Status: proposed (user). PGE2 loop: no isolated activity.
+
+**C2. No molecule lost.** Every molecule of the PD map is carried by an activity of the output, on its own or as a
+member of a complex activity (the receptor in PGE2:PTGER2). Also needed for omics data on the output. Open: a currency
+molecule dropped as a cofactor (P12) would fail it, unless C2 counts it as carried by its reaction's influence.
+Status: proposed (user). PGE2 loop: none lost.
+
 ## Layer 2: Activity Flow to Boolean
 
 **B1. Combining influences on one node.**
@@ -124,6 +145,7 @@ All rules are proposed or open as of 2026-11-02; the first case is the PGE2 loop
 - d. Left out: the target falls when its making stops (hand rules).
 - In use: b where the product is a node, c otherwise. Status: open (c against d decides whether the loop latches).
   Cases: 4, 5.
+- Tried (PGE2 loop): c and d behave the same in the four scenarios (the latch after LPS comes from the loop, not from persistence of CREB); they differ only once PKA is removed with CREB on.
 
 **B3. A negative influence from a regulated remover (PDE4B, induced with LPS).**
 - a. AND NOT (hand rules, our Activity Flow version).
