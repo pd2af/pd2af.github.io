@@ -11,8 +11,8 @@ sitemap: false
 Our rules for converting SBGN Process Description maps to Activity Flow and then to Boolean models, each with its
 options, compared with CaSQ, the PD2AF 1.0 specification and pd2af 0.1.0 (Rougny). A draft: no option is final.
 
-Each rule: the PD pattern (or the AF statement, for B rules), the options with what each costs, the option in use
-, the status, the cases that test it. Status: **open** (no option chosen), **proposed** (an
+Each rule: the PD pattern (or the AF statement, for B rules), the options with what each costs, the option in use,
+the status, the cases that test it. Status: **open** (no option chosen), **proposed** (an
 option in use, not yet decided by the user), **decided** (user, date). Names of other systems' rules in brackets:
 spec = the pd2af specification (https://pd2af.github.io/specification/), CaSQ 1.4.4, pd2af 0.1.0 (Rougny).
 
