@@ -138,6 +138,12 @@ Status: proposed (user). PGE2 loop: none lost.
   is on unless one of them is; gates as drawn.
 - In use: a. Status: proposed.
 
+- Two cases B1 leaves open, as the converter's SBML-qual writer applies them (its design record D34,
+  2026-11-20; proposed, not decided): a **necessary stimulation** is ANDed with the rest (SBGN's meaning: the target
+  cannot be on without it; the rules read off Activity Flow maps so far count it as an ordinary positive), and an **unknown influence** is kept
+  out of the rule, listed as an input of sign unknown (so far counted as positive). The PGE2 loop has neither,
+  so both give its 26 rules alike.
+
 **B2. A negative influence from a remover that is always present (HPGD, PP1).**
 - a. AND NOT: keeps the target off for good (criterion 3). Wrong as a default.
 - b. The remover goes into the product (15-keto-PGE2 = PGE2 and SLCO2A1 and HPGD), not into the target.
