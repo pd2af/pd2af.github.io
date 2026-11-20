@@ -117,6 +117,11 @@ All rules are proposed or open as of 2026-11-02; the first case is the PGE2 loop
 - a. AND of both sides to both (spec M-CATR-M).
 - In use: none. Status: open. Case: 14.
 
+**Gates on a process, by their head (2026-11-21, review of the one-run route).** A gate whose head is inhibition gives
+inhibitors (an OR gate each input on its own, an AND gate its inputs together), no longer positive drivers; a gate whose
+head is a trigger follows P17. A positive gate beside a catalyst is still joined to each of the catalysts' alternatives
+(P8): whether it should be one alternative among them instead is open.
+
 **P17. Necessary stimulation (trigger) on a process.**
 - a. Needed in every alternative: each set of drivers (P8) includes it, so the process (and what it gives) cannot run
   without it, whichever catalyst runs it. SBGN's meaning of a necessary stimulation. Several triggers: each needed.
@@ -185,7 +190,8 @@ Status: proposed (user). PGE2 loop: none lost.
 - In use: a. Status: proposed.
 
 **B6. Delay.**
-- a. A delay gate becomes a variable of its own that copies its input one step late (our script, delay gate).
+- a. A delay gate becomes a variable of its own that copies its input one step late (our script, delay gate), one per
+  delayed influence (two delays on one target stay two: tau_<target>_1, _2; review 2026-11-21).
 - In use: a. Status: proposed. Case: 11.
 
 ## Questions on the PD2AF 1.0 specification
