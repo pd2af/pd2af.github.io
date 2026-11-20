@@ -117,6 +117,15 @@ All rules are proposed or open as of 2026-11-02; the first case is the PGE2 loop
 - a. AND of both sides to both (spec M-CATR-M).
 - In use: none. Status: open. Case: 14.
 
+**P17. Necessary stimulation (trigger) on a process.**
+- a. Needed in every alternative: each set of drivers (P8) includes it, so the process (and what it gives) cannot run
+  without it, whichever catalyst runs it. SBGN's meaning of a necessary stimulation. Several triggers: each needed.
+- b. An ordinary positive driver, one alternative among the catalysts (CaSQ, which ORs catalysis, stimulation and
+  necessary stimulation, casq-4).
+- In use: a. Status: decided (session, 2026-11-21; the user delegated the modelling choices: "judge and decide yourself").
+  Reason: b lets a process run without what the map says it needs. Case: none in the PGE2 loop (no trigger); the
+  Atlas maps with triggers (iNOS, TGF-beta AF).
+
 ## Checks on every conversion (user, 2026-11-02)
 
 Not rules that make influences: tests the output must pass, reported by the engine after every run.
@@ -138,11 +147,21 @@ Status: proposed (user). PGE2 loop: none lost.
   is on unless one of them is; gates as drawn.
 - In use: a. Status: proposed.
 
-- Two cases B1 leaves open, as the converter's SBML-qual writer applies them (its design record D36,
-  2026-11-20; proposed, not decided): a **necessary stimulation** is ANDed with the rest (SBGN's meaning: the target
-  cannot be on without it; the rules read off Activity Flow maps so far count it as an ordinary positive), and an **unknown influence** is kept
-  out of the rule, listed as an input of sign unknown (so far counted as positive). The PGE2 loop has neither,
-  so both give its 26 rules alike.
+- Two cases B1 left open, decided (session, 2026-11-21; the user delegated: "judge and decide yourself ... write it
+  down, and if it's an issue, we need to address it"). Applied the same by this engine and by the converter's SBML-qual
+  writer on hand-drawn Activity Flow maps (its design record D36):
+  - **Necessary stimulation**: ANDed with the rest: the target is on only when every necessary stimulation is on and,
+    besides, any ordinary positive influence (or none is drawn) and no negative one. Several necessary stimulations are
+    each needed. Drawing (the user's reading, 2026-11-21): one necessary stimulation per target, several conditions
+    joined by an AND gate into it; the same model either way, so the rule for drawing goes to model-ready as a
+    proposal. CaSQ counts it as an ordinary positive (casq-4).
+  - **Unknown influence** (SBGN AF's unknown influence, CellDesigner's modulation): kept out of the rule, listed in the
+    model as an input of sign unknown, and said when the file is written, so it is flagged, never silently dropped
+    and never guessed as positive (Ahmed Hemedan's request, spec-14). A model-ready map has none: an influence of
+    unknown sign is resolved before modelling, by drawing its mechanism (a dose that turns activation into inhibition:
+    two influences with their own conditions, or a multi-valued node with thresholds, which SBML-qual allows), or
+    removed. A node whose only influences are unknown keeps its level, as an input. Open for the modellers
+    (`comparison/spec-questions.md`, 2026-11-21).
 
 **B2. A negative influence from a remover that is always present (HPGD, PP1).**
 - a. AND NOT: keeps the target off for good (criterion 3). Wrong as a default.
@@ -185,3 +204,11 @@ For the user (and for Adrien Rougny, if the user talks to him). Each answer goes
 5. `hidden_inhibition_1`: the AF file has an activity C that the PD file does not (R1 in the PD). A slip in the file? (none, a file to check)
 6. Transcription with a factor (gene and factor through an AND gate): the spec shows gene to mRNA only. What happens to
    the factor? (P14)
+
+## For the modellers (2026-11-21)
+
+- Unknown influence: kept out of the Boolean rule and flagged (rules/RULES.md, B1). Is that what modellers expect, or
+  do they prefer a choice per influence (positive, negative, or a node of its own)? And for a dose-dependent effect
+  (activation at a low level, inhibition at a high one), a multi-valued node with thresholds or two Boolean nodes?
+- Necessary stimulation: ANDed with every alternative (P17, B1). CaSQ ORs it. Any published model that relies on the
+  OR reading?
